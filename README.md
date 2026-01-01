@@ -106,7 +106,6 @@ python3 -m http.server 8000
 ```
 Game/
 ├── index.html          # Main game file (HTML + CSS + JS)
-├── game.py            # Python CLI version (reference implementation)
 └── README.md          # This file
 ```
 
