@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Means Go | Traffic Strategy</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;900&display=swap');
+
+        :root {
+            --bg: #030712;
+            --road-grey: #111827;
+            --accent: #00ffa3;
+            --multiplier: #ffcc00;
+            --stabilizer: #00d9ff;
+            --extender: #cc66ff;
+            --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Syncopate', sans-serif;
+            margin-top: 30px;
+            font-size: 2.2rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 163, 0.3));
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 40px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+
+        #lane {
+            width: 100%;
+            max-width: 1000px;
+            height: 200px;
+            background: var(--road-grey);
+            margin: 40px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 2px solid #334155;
+            border-bottom: 2px solid #334155;
+            box-shadow: inset 0 0 100px #000;
+        }
+
+        #lane::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, transparent, transparent 50px, #334155 50px, #334155 100px);
+            transform: translateY(-50%);
+            opacity: 0.3;
+        }
+
+        .slot {
+            width: 130px;
+            height: 170px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card {
+            width: 130px;
+            height: 170px;
+            background: #1e293b;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card i {
+            margin-top: 10px;
+            color: var(--accent);
+        }
+
+        .card b {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        .card small {
+            font-size: 0.6rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .multiplier {
+            border-top: 4px solid var(--multiplier);
+        }
+
+        .base {
+            border-top: 4px solid #64748b;
+        }
+
+        .stabilizer {
+            border-top: 4px solid var(--stabilizer);
+        }
+
+        .extender {
+            border-top: 4px solid var(--extender);
+        }
+
+        .hand {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        button {
+            margin: 30px;
+            padding: 18px 50px;
+            background: none;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 4px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            border-color: #334155;
+            color: #334155;
+        }
+
+        #message {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.75rem;
+            color: var(--accent);
+            height: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Green Means Go</h1>
+
+    <div class="stats">
+        <div>Day <span id="day">1</span></div>
+        <div>Score: <span id="score">0</span> / <span id="target">80</span></div>
+    </div>
+
+    <div id="lane">
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+    </div>
+
+    <div id="message">INITIALIZING GRID...</div>
+    <div class="hand" id="hand"></div>
+    <button id="resolveBtn" onclick="resolveLane()" disabled>Execute Protocol</button>
+
+    <script>
+        // Sound Engine
+        const sfx = {
+            ctx: null,
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+            play(freq, type, duration, vol = 0.1) {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + duration);
+            },
+            click() { this.play(600, 'sine', 0.1); },
+            place() { this.play(400, 'square', 0.1, 0.05); },
+            score() { this.play(800, 'sine', 0.2); },
+            bonus() {
+                this.play(1000, 'sine', 0.1);
+                setTimeout(() => this.play(1300, 'sine', 0.2), 100);
+            },
+            fail() { this.play(150, 'sawtooth', 0.5, 0.2); }
+        };
+
+        const CATALOG = [
+            { name: "Sedan", cat: "base", val: 15, icon: "car", desc: "Stable Flow" },
+            { name: "Transit", cat: "base", val: 25, icon: "bus", desc: "High Data | Chain Penalty" },
+            { name: "Signal", cat: "multiplier", charges: 2, icon: "lightbulb", desc: "Next 2 Units x2" },
+            { name: "Enforcer", cat: "stabilizer", icon: "shield-check", desc: "Blocks Penalty" },
+            { name: "Upgrade", cat: "extender", icon: "timer", desc: "Signal +1 Chg" }
+        ];
+
+        let currentLane = [], score = 0, target = 80, dayNum = 1;
+
+        function initHand() {
+            const hand = document.getElementById("hand");
+            hand.innerHTML = "";
+            CATALOG.forEach(item => {
+                const c = document.createElement("div");
+                c.className = `card ${item.cat}`;
+                c.innerHTML = `
+                    <i data-lucide="${item.icon}" width="40" height="40"></i>
+                    <b>${item.name}</b>
+                    <small>${item.desc}</small>`;
+                c.onclick = () => {
+                    if (currentLane.length < 5) {
+                        sfx.place();
+                        currentLane.push({ ...item });
+                        updateUI();
+                    }
+                };
+                hand.appendChild(c);
+            });
+            lucide.createIcons(); // Render icons
+            document.getElementById("message").innerText = "RUN THE CITY";
+        }
+
+        function updateUI() {
+            const slots = document.querySelectorAll(".slot");
+            slots.forEach((s, i) => {
+                s.innerHTML = currentLane[i] ?
+                    `<div class="card ${currentLane[i].cat}" style="width:115px; height:155px; transform:scale(0.9)">
+                        <i data-lucide="${currentLane[i].icon}" width="30" height="30"></i>
+                        <b style="font-size:0.5rem">${currentLane[i].name}</b>
+                    </div>` : "";
+            });
+            lucide.createIcons();
+            document.getElementById("resolveBtn").disabled = currentLane.length < 5;
+        }
+
+        async function resolveLane() {
+            const btn = document.getElementById("resolveBtn");
+            const hand = document.getElementById("hand");
+            btn.disabled = true;
+            hand.style.pointerEvents = "none";
+
+            let dayScore = 0;
+            let multCharges = 0;
+            let policeActive = false;
+
+            // Pre-pass: Timer logic
+            currentLane.forEach((item, i) => {
+                if (item.icon === "timer") {
+                    for (let j = i + 1; j < currentLane.length; j++) {
+                        if (currentLane[j].icon === "lightbulb") {
+                            currentLane[j].charges++;
+                            break;
+                        }
+                    }
+                }
+            });
+
+            const slots = document.querySelectorAll(".slot");
+            for (let i = 0; i < currentLane.length; i++) {
+                const item = currentLane[i];
+                slots[i].style.transform = "scale(1.1)";
+                slots[i].style.borderColor = "var(--accent)";
+
+                await new Promise(r => setTimeout(r, 600));
+
+                if (item.cat === "base") {
+                    sfx.score();
+                    let val = item.val;
+                    // Check for bus congestion (back-to-back buses)
+                    if (item.icon === "bus" && currentLane[i - 1]?.icon === "bus") {
+                        if (policeActive) {
+                            policeActive = false;
+                            document.getElementById("message").innerText = `POLICE CLEARED JAM FOR ${item.name}`;
+                            await new Promise(r => setTimeout(r, 400));
+                        }
+                        else {
+                            val -= 15; // Penalty: 25 - 15 = 10
+                            document.getElementById("message").innerText = `⚠️ CONGESTION! ${item.name} SLOWED (-15)`;
+                            await new Promise(r => setTimeout(r, 400));
+                        }
+                    }
+                    if (multCharges > 0) { val *= 2; multCharges--; }
+                    dayScore += val;
+                    document.getElementById("message").innerText = `FLOWING ${item.name}: +${val}`;
+                }
+                else if (item.cat === "multiplier") {
+                    sfx.click();
+                    multCharges += item.charges;
+                    document.getElementById("message").innerText = `SIGNAL ACTIVE: ${multCharges} CHARGES`;
+                }
+                else if (item.cat === "stabilizer") {
+                    sfx.click();
+                    policeActive = true;
+                    document.getElementById("message").innerText = "POLICE CLEARING LANE";
+                }
+
+                slots[i].style.transform = "scale(1)";
+                slots[i].style.borderColor = "rgba(255, 255, 255, 0.05)";
+            }
+
+            // Strategy Bonus check (Diversity)
+            if (new Set(currentLane.map(i => i.name)).size >= 4) {
+                sfx.bonus();
+                dayScore += 25;
+                document.getElementById("message").innerText += " | STRATEGY BONUS +25";
+                await new Promise(r => setTimeout(r, 1000));
+            }
+
+            score += dayScore;
+            document.getElementById("score").innerText = score;
+
+            if (score >= target) {
+                sfx.bonus();
+                dayNum++; target += 70;
+                document.getElementById("message").innerText = "TARGET REACHED. UPLOADING NEW GRID...";
+                setTimeout(resetDay, 1500);
+            } else {
+                sfx.fail();
+                document.getElementById("message").innerText = "GRIDLOCK DETECTED. REBOOTING...";
+                document.getElementById("message").style.color = "#ff4444";
+                setTimeout(() => location.reload(), 2000);
+            }
+        }
+
+        function resetDay() {
+            currentLane = [];
+            document.getElementById("day").innerText = dayNum;
+            document.getElementById("target").innerText = target;
+            document.getElementById("hand").style.pointerEvents = "all";
+            updateUI();
+            initHand();
+        }
+
+        initHand();
+    </script>
+</body>
+
+</html>
