@@ -106,7 +106,8 @@ python3 -m http.server 8000
 ```
 Game/
 ├── index.html          # Main game file (HTML + CSS + JS)
-└── README.md          # This file
+├── how_to_play.html    # Dedicated instruction page
+└── README.md           # This file
 ```
 
 ### Browser Compatibility
@@ -140,7 +141,12 @@ None currently! If you find a bug, please report it.
 
 ## 📝 Version History
 
-### v1.1 (Current)
+### v1.2 (Current)
+- ✅ Added dedicated "How to Play" page
+- ✅ Integrated help link in main menu
+- ✅ Optimized vehicle flow logic
+
+### v1.1
 - ✅ Fixed Timer/Upgrade logic bug
 - ✅ Fixed bus congestion penalty calculation
 - ✅ Improved police protection feedback

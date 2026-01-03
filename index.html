@@ -43,6 +43,22 @@
             filter: drop-shadow(0 0 10px rgba(0, 255, 163, 0.3));
         }
 
+        .help-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.7rem;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--accent);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .help-link:hover {
+            opacity: 0.8;
+            border-bottom-style: solid;
+        }
+
         .stats {
             display: flex;
             gap: 40px;
@@ -204,6 +220,7 @@
 <body>
 
     <h1>Green Means Go</h1>
+    <a href="how_to_play.html" class="help-link">How to Play?</a>
 
     <div class="stats">
         <div>Day <span id="day">1</span></div>

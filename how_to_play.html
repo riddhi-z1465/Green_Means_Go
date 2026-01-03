@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Means Go | How to Play</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;900&display=swap');
+
+        :root {
+            --bg: #030712;
+            --road-grey: #111827;
+            --accent: #00ffa3;
+            --multiplier: #ffcc00;
+            --stabilizer: #00d9ff;
+            --extender: #cc66ff;
+            --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Syncopate', sans-serif;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 8px;
+            margin-top: 30px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 163, 0.3));
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        h3 {
+            color: #fff;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        ul {
+            line-height: 1.8;
+            list-style-type: none;
+            /* Custom bullets */
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "►";
+            color: var(--accent);
+            display: inline-block;
+            width: 1.5em;
+            margin-left: -1.5em;
+            font-size: 0.8em;
+        }
+
+        .unit-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .unit-table th,
+        .unit-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .unit-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        strong {
+            color: #fff;
+        }
+
+        .card-preview {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .cat-base {
+            color: #fff;
+            border: 1px solid #64748b;
+        }
+
+        .cat-multiplier {
+            color: var(--multiplier);
+            border: 1px solid var(--multiplier);
+        }
+
+        .cat-stabilizer {
+            color: var(--stabilizer);
+            border: 1px solid var(--stabilizer);
+        }
+
+        .cat-extender {
+            color: var(--extender);
+            border: 1px solid var(--extender);
+        }
+
+        .back-btn {
+            margin: 30px;
+            padding: 15px 40px;
+            background: none;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 3px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-left: 4px solid var(--multiplier);
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>How to Play</h1>
+
+    <div class="container">
+
+        <h2>Objective</h2>
+        <ul>
+            <li><strong>Reach the target score</strong> each day by strategically placing 5 units in the lane.</li>
+            <li><strong>Day 1 Target:</strong> 80 points.</li>
+            <li>Each subsequent day increases the target by 70 points.</li>
+            <li>If you fail to meet the target, it's <strong>Game Over</strong>.</li>
+        </ul>
+
+        <h2>Available Units</h2>
+        <table class="unit-table">
+            <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Type</th>
+                    <th>Base Value</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🚗 Sedan</td>
+                    <td><span class="card-preview cat-base">BASE</span></td>
+                    <td>15 pts</td>
+                    <td>Stable, reliable flow.</td>
+                </tr>
+                <tr>
+                    <td>🚌 Transit</td>
+                    <td><span class="card-preview cat-base">BASE</span></td>
+                    <td>25 pts</td>
+                    <td>High value but risky (congestion penalty).</td>
+                </tr>
+                <tr>
+                    <td>💡 Signal</td>
+                    <td><span class="card-preview cat-multiplier">MULTI</span></td>
+                    <td>-</td>
+                    <td>Doubles the next 2 units (2 charges).</td>
+                </tr>
+                <tr>
+                    <td>🛡️ Enforcer</td>
+                    <td><span class="card-preview cat-stabilizer">STAB</span></td>
+                    <td>-</td>
+                    <td>Blocks the next penalty.</td>
+                </tr>
+                <tr>
+                    <td>⏱️ Upgrade</td>
+                    <td><span class="card-preview cat-extender">EXT</span></td>
+                    <td>-</td>
+                    <td>Adds +1 charge to the next Signal.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Scoring Rules</h2>
+
+        <h3>Base Scoring</h3>
+        <ul>
+            <li><strong>Sedan:</strong> +15 points (always stable).</li>
+            <li><strong>Transit:</strong> +25 points (high reward, high risk).</li>
+        </ul>
+
+        <h3>Special Mechanics</h3>
+
+        <h3>🚌 Bus Congestion Penalty</h3>
+        <ul>
+            <li>When two <strong>Transit</strong> units are placed <strong>back-to-back</strong>.</li>
+            <li>The second Transit suffers a <strong>-15 penalty</strong> (25 - 15 = 10 pts).</li>
+            <li>Can be blocked by placing an <strong>Enforcer</strong> before the buses.</li>
+        </ul>
+
+        <h3>💡 Signal Multiplier</h3>
+        <ul>
+            <li>Doubles the score of the <strong>next 2 base units</strong>.</li>
+            <li>Example: <code>Signal → Transit (50) → Sedan (30)</code></li>
+        </ul>
+
+        <h3>⏱️ Upgrade Extender</h3>
+        <ul>
+            <li>Extends the <strong>next Signal's charges</strong> by +1.</li>
+            <li>Example: <code>Upgrade → Signal → 3 units doubled</code>.</li>
+        </ul>
+
+        <h3>🛡️ Enforcer Protection</h3>
+        <ul>
+            <li>Blocks the <strong>next congestion penalty</strong>.</li>
+            <li>Consumed after blocking one penalty.</li>
+        </ul>
+
+        <h2>Strategy Bonus</h2>
+        <ul>
+            <li><strong>Diversity Bonus:</strong> Use 4 or more different unit types in one lane for <strong>+25
+                    points</strong>.</li>
+        </ul>
+
+        <h2>Example High-Score Combo</h2>
+        <div class="example-box">
+            Upgrade → Signal → Transit → Transit → Sedan<br>
+            = 0 + 0 + 50 + 20 + 30 + 25 (diversity) = <strong>125 points!</strong>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">Back to Game</a>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
